@@ -4,7 +4,7 @@
 
 GoCD.script {
   pipelines {
-    pipeline('ep_6') {
+    pipeline('groovy_test') {
       group = 'tests'
       labelTemplate = '${COUNT}'
       lockBehavior = 'none'
