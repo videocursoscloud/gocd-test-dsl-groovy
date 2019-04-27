@@ -49,7 +49,7 @@ GoCD.script {
           }
           jobs {
             job('test') {
-              runInstanceCount = '0'
+              runInstanceCount = 1
               timeout = 0
               tasks {
                 exec {
@@ -74,7 +74,7 @@ GoCD.script {
           }
           jobs {
             job('push') {
-              runInstanceCount = '0'
+              runInstanceCount = 1
               timeout = 0
               tasks {
                 exec {
