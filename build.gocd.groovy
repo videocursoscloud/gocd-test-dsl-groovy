@@ -5,9 +5,8 @@
 def gitURL = "https://github.com/grails/grails-core.git"
 def command = "git ls-remote -h $gitURL"
 
-def branches = proc.in.text.readLines().collect { 
-    it.replaceAll(/[a-z0-9]*\trefs\/heads\//, '') 
+
+def gettags = (command).execute()
+return gettags.text.readLines().collect { 
+  it.split()[1].replaceAll('refs/heads/', '').replaceAll('refs/tags/', '').replaceAll("\\^\\{\\}", '')
 }
-
-println branches
-
