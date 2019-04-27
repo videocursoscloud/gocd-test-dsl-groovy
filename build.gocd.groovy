@@ -2,93 +2,12 @@
  * This file was automatically exported by the GoCD Groovy DSL Plugin.
  */
 
-GoCD.script {
-  pipelines {
-    pipeline('groovy_test') {
-      group = 'tests'
-      labelTemplate = '${COUNT}'
-      lockBehavior = 'none'
-      materials {
-        git {
-          branch = 'master'
-          shallowClone = false
-          url = 'git@github.com:videocursoscloud/curso_gocd_2019.git'
-        }
-      }
-      stages {
-        stage('build') {
-          artifactCleanupProhibited = false
-          cleanWorkingDir = false
-          fetchMaterials = true
-          approval {
-          }
-          jobs {
-            job('build') {
-              runInstanceCount = 1
-              timeout = 0
-              tasks {
-                exec {
-                  commandLine = ['make', 'build']
-                  runIf = 'passed'
-                  workingDir = 'ep_6'
-                }
-                exec {
-                  commandLine = ['make', 'tag']
-                  runIf = 'passed'
-                  workingDir = 'ep_6'
-                }
-              }
-            }
-          }
-        }
-        stage('test') {
-          artifactCleanupProhibited = false
-          cleanWorkingDir = false
-          fetchMaterials = true
-          approval {
-          }
-          jobs {
-            job('test') {
-              runInstanceCount = 1
-              timeout = 0
-              tasks {
-                exec {
-                  commandLine = ['make', 'test']
-                  runIf = 'passed'
-                  workingDir = 'ep_6'
-                }
-                exec {
-                  commandLine = ['make', 'test_clean']
-                  runIf = 'any'
-                  workingDir = 'ep_6'
-                }
-              }
-            }
-          }
-        }
-        stage('push') {
-          artifactCleanupProhibited = false
-          cleanWorkingDir = false
-          fetchMaterials = true
-          approval {
-          }
-          jobs {
-            job('push') {
-              runInstanceCount = 1
-              timeout = 0
-              tasks {
-                exec {
-                  commandLine = ['make', 'push']
-                  runIf = 'passed'
-                  workingDir = 'ep_6'
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+def gitURL = "https://github.com/grails/grails-core.git"
+def command = "git ls-remote -h $gitURL"
+
+def branches = proc.in.text.readLines().collect { 
+    it.replaceAll(/[a-z0-9]*\trefs\/heads\//, '') 
 }
 
+println branches
 
