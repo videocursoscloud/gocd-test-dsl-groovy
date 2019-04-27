@@ -24,7 +24,7 @@ GoCD.script {
           }
           jobs {
             job('build') {
-              runInstanceCount = '0'
+              runInstanceCount = 1
               timeout = 0
               tasks {
                 exec {
