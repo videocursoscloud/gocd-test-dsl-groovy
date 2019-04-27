@@ -19,12 +19,9 @@ GoCD.script {
                   commandString = 'echo hello world'
                 }
               }
-
-              
-            }
-          }
+           }
         }
-      }
-    }
+     }
   }
 }
+
