@@ -1,41 +1,86 @@
-import cd.go.contrib.plugins.configrepo.groovy.dsl.*
+/*
+ * This file was automatically exported by the GoCD Groovy DSL Plugin.
+ */
 
 GoCD.script {
   pipelines {
-    pipeline('build') {
-      group = 'go-cd'
-      lockBehavior = 'lockOnFailure'
-      trackingTool {
-        link = 'https://github.com/ketan/gocd-groovy-dsl-config-plugin/issues/${ID}'
-        regex = ~/##(\d+)/
-      }
-
-      environmentVariables = [
-        'pipeline-var': 'pipeline-value'
-      ]
-
+    pipeline('ep_6') {
+      group = 'tests'
+      labelTemplate = '${COUNT}'
+      lockBehavior = 'none'
       materials {
-        git('my-repo') {
-          url = 'https://github.com/ketan/gocd-groovy-dsl-config-plugin'
+        git {
           branch = 'master'
-          blacklist = ['README.md', "examples/**/*"]
+          shallowClone = false
+          url = 'git@github.com:videocursoscloud/curso_gocd_2019.git'
         }
       }
-
       stages {
-        stage('test') {
-          environmentVariables = [
-            'stage-var': 'stage-value'
-          ]
+        stage('build') {
+          artifactCleanupProhibited = false
+          cleanWorkingDir = false
+          fetchMaterials = true
+          approval {
+          }
           jobs {
             job('build') {
+              runInstanceCount = '0'
+              timeout = 0
               tasks {
-                bash {
-                  commandString = "git clean -fdx"
+                exec {
+                  commandLine = ['make', 'build']
+                  runIf = 'passed'
+                  workingDir = 'ep_6'
                 }
-
-                bash {
-                  commandString = './gradlew clean assemble test'
+                exec {
+                  commandLine = ['make', 'tag']
+                  runIf = 'passed'
+                  workingDir = 'ep_6'
+                }
+              }
+            }
+          }
+        }
+        stage('test') {
+          artifactCleanupProhibited = false
+          cleanWorkingDir = false
+          fetchMaterials = true
+          approval {
+          }
+          jobs {
+            job('test') {
+              runInstanceCount = '0'
+              timeout = 0
+              tasks {
+                exec {
+                  commandLine = ['make', 'test']
+                  runIf = 'passed'
+                  workingDir = 'ep_6'
+                }
+                exec {
+                  commandLine = ['make', 'test_clean']
+                  runIf = 'any'
+                  workingDir = 'ep_6'
+                }
+              }
+            }
+          }
+        }
+        stage('push') {
+          artifactCleanupProhibited = false
+          cleanWorkingDir = false
+          fetchMaterials = true
+          approval {
+          }
+          jobs {
+            job('push') {
+              runInstanceCount = '0'
+              timeout = 0
+              tasks {
+                exec {
+                  commandLine = ['make', 'push']
+                  runIf = 'passed'
+                  workingDir = 'ep_6'
                 }
               }
             }
@@ -45,3 +90,5 @@ GoCD.script {
     }
   }
 }
+
+
